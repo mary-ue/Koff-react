@@ -1,0 +1,21 @@
+.developers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.link {
+  border-radius: 4px;
+  outline: 1px solid transparent;
+  transition: all .3s ease;
+
+  &:hover,
+  &:active {
+    color: #780096;
+  }
+
+  &:focus-visible {
+    color: #780096;
+    outline-color: #780096;
+  }
+}
