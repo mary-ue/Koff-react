@@ -29,7 +29,7 @@ const authSlice = createSlice({
       localStorage.removeItem('accessToken');
     },
   },
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchAccessToken.pending, (state) => {
         state.loading = true;
