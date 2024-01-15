@@ -1,10 +1,10 @@
 import s from './CardItem.module.scss';
 
-export const CardItem = () => {
+export const CardItem = ({good}) => {
 
   return (
     <article className={s.card}>
-      Divan
+      {good.name}
     </article>
   );
 };
