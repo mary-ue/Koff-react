@@ -14,7 +14,7 @@ export const fetchGoods = createAsyncThunk(
     });
 
     if (!response.ok) {
-      throw new Error('Не удалось получить каталог');
+      throw new Error('Не удалось загрузить продукты');
     }
 
     return response.json();

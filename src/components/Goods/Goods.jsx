@@ -30,7 +30,7 @@ export const Goods = () => {
           {goods &&
             goods.map((good) => (
               <li key={good.id}>
-                <CardItem good={good} />
+                <CardItem {...good} />
               </li>
             ))}
         </ul>
