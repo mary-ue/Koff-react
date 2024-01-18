@@ -1,80 +1,65 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Thumbs } from 'swiper/modules';
 import 'swiper/css';
 import s from './Card.module.scss';
 import { Container } from '../../views/Container/Container';
-import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Slider } from '../Slider/Slider';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchGood } from '../../store/good/good.slice';
 
 export const Card = () => {
-  const [mainSwiper, setMainSwiper] = useState(null);
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
-
   const { productId } = useParams();
-  console.log(productId);
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.good);
+  // console.log(data);
+
+  useEffect(() => {
+    dispatch(fetchGood(productId));
+  }, [dispatch, productId]);
+
+  if (loading) return <div>Загрузка...</div>;
+  if (error) return <div>Ошибка: {error}</div>;
 
   return (
     <section className={s.card}>
       <Container className={s.container}>
         <h2 className={s.title}>Кресло с подлокотниками</h2>
-        <div className={s.picture}>
-          <div className={s.sliderMain}>
-            <Swiper
-              modules={[Navigation, Thumbs]}
-              thumbs={{ swiper: thumbsSwiper }}
-              onSwiper={setMainSwiper}
-              spaceBetween={10}
-            >
-              <SwiperSlide>
-                <img src="/img/photo.jpg" alt="Кресло с подлокотниками" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src="/img/photo.jpg" alt="Кресло с подлокотниками" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src="/img/photo.jpg" alt="Кресло с подлокотниками" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src="/img/photo.jpg" alt="Кресло с подлокотниками" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src="/img/photo.jpg" alt="Кресло с подлокотниками" />
-              </SwiperSlide>
-            </Swiper>
-            <button onClick={() => mainSwiper.slideNext()}>next</button>
-            <button onClick={() => mainSwiper.slidePrev()}>prev</button>
-          </div>
-          <div className={s.sliderThumbnails}>
-            <Swiper
-              onSwiper={setThumbsSwiper}
-              modules={[Navigation, Thumbs]}
-              watchSlidesProgress
-              spaceBetween={14}
-              slidesPerView={4}
-            >
-              <SwiperSlide>
-                <img src="/img/photo.jpg" alt="Кресло с подлокотниками" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src="/img/photo.jpg" alt="Кресло с подлокотниками" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src="/img/photo.jpg" alt="Кресло с подлокотниками" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src="/img/photo.jpg" alt="Кресло с подлокотниками" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src="/img/photo.jpg" alt="Кресло с подлокотниками" />
-              </SwiperSlide>
-            </Swiper>
-          </div>
-        </div>
+        <Slider data={data} />
         <div className={s.info}>
           <p className={s.price}>{'5000'.toLocaleString()}&nbsp;₽</p>
           <p className={s.article}>арт. 84348945757</p>
           <div className={s.characteristics}>
-            <h3>Общие характеристики</h3>
+            <h3 className={s.characteristicsTitle}>Общие характеристики</h3>
+            <table className={s.table}>
+              <tbody>
+                {data.characteristics.map((item, i) => (
+                  <tr className={s.row} key={i}>
+                    <td className={s.field}>{item[0]}</td>
+                    <td className={s.value}>{item[1]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className={s.btns}>
+            <button className={s.btn}>В корзину</button>
+            <button className={s.like}>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8.41301 13.8733C8.18634 13.9533 7.81301 13.9533 7.58634 13.8733C5.65301 13.2133 1.33301 10.46 1.33301 5.79332C1.33301 3.73332 2.99301 2.06665 5.03967 2.06665C6.25301 2.06665 7.32634 2.65332 7.99967 3.55998C8.67301 2.65332 9.75301 2.06665 10.9597 2.06665C13.0063 2.06665 14.6663 3.73332 14.6663 5.79332C14.6663 10.46 10.3463 13.2133 8.41301 13.8733Z"
+                  fill="white"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </Container>
