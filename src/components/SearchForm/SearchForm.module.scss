@@ -26,6 +26,10 @@
   &:hover {
     border-color: #DFE3EB;
   }
+
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
 }
 
 .button {

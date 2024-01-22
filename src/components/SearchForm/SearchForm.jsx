@@ -1,9 +1,27 @@
+import { useNavigate } from 'react-router-dom';
 import s from './SearchForm.module.scss';
 
 export const SearchForm = () => {
+  const navigate = useNavigate();
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    const searchQuery = evt.target.search.value;
+
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+      evt.target.reset();
+    }
+  };
+
   return (
-    <form className={s.form}>
-      <input className={s.input} type="search" placeholder="Введите запрос" />
+    <form className={s.form} onSubmit={handleSubmit}>
+      <input
+        className={s.input}
+        name="search"
+        type="search"
+        placeholder="Введите запрос"
+      />
       <button className={s.button} type="submit">
         <svg
           width="16"
