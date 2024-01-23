@@ -4,19 +4,29 @@ import { CardItem } from '../../components/CardItem/CardItem';
 import s from './Goods.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchGoods } from '../../store/goods/goods.slice';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 
 export const Goods = () => {
   const dispatch = useDispatch();
   const [searchParam] = useSearchParams();
+  const { data: goods, loading, error } = useSelector((state) => state.goods);
+  const { favoriteList } = useSelector((state) => state.favorite);
+  const { pathname } = useLocation();
+
   const category = searchParam.get('category');
   const q = searchParam.get('q');
 
-  const { data: goods, loading, error } = useSelector((state) => state.goods);
+  useEffect(() => {
+    if (pathname !== '/favorite') {
+      dispatch(fetchGoods({ category, q }));
+    }
+  }, [dispatch, category, q, pathname]);
 
   useEffect(() => {
-    dispatch(fetchGoods({ category, q }));
-  }, [dispatch, category, q]);
+    if (pathname === '/favorite') {
+      dispatch(fetchGoods( { list: favoriteList.join(',') }));
+    }
+  }, [dispatch, favoriteList, pathname]);
 
   if (loading) return <div>Загрузка...</div>;
 
