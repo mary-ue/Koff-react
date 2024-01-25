@@ -6,7 +6,7 @@ import { fetchAccessToken } from "./store/auth/auth.slice";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Goods } from "./views/Goods/Goods";
 import { Catalog } from "./views/Catalog/Catalog";
-import { Cart } from "./components/Cart/Cart";
+import { Cart } from "./views/Cart/Cart";
 import { Card } from "./components/Card/Card";
 
 const router = createBrowserRouter([
