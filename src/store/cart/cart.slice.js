@@ -10,8 +10,8 @@ export const fetchCart = createAsyncThunk(
     try {
       const response = await fetch(`${API_URL}api/cart`, {
         headers: {
-          Authorization: `Bearer ${token},`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       })
 
       if (!response.ok) {
@@ -36,7 +36,7 @@ export const addProductToCart = createAsyncThunk(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token},`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(productData)
       })
