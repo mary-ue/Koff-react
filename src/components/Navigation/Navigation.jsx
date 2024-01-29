@@ -1,7 +1,17 @@
 import { Link } from 'react-router-dom';
 import s from './Navigation.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchCart } from '../../store/cart/cart.slice';
 
 export const Navigation = () => {
+  const dispatch = useDispatch();
+  const product = useSelector(state => state.cart.products);
+
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch])
+
   return (
     <nav className={s.navigation}>
       <Link className={s.link} to="/favorite">
@@ -23,7 +33,7 @@ export const Navigation = () => {
       </Link>
       <Link className={s.link} to="/cart">
         <span className={s.text}>Корзина</span>
-        <span>(0)</span>
+        <span>({product.length})</span>
         <svg
           width="16"
           height="16"
