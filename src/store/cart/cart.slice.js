@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { API_URL } from '../../const.js';
 
 export const fetchCart = createAsyncThunk(
   'cart/fetchCart',
-  async(_, { getState, rejectWithValue}) => {
+  async (_, { getState, rejectWithValue }) => {
     const state = getState();
     const token = state.auth.accessToken;
 
@@ -12,7 +12,7 @@ export const fetchCart = createAsyncThunk(
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
       if (!response.ok) {
         throw new Error('Не удалось загрузить содержимое корзины');
@@ -20,14 +20,14 @@ export const fetchCart = createAsyncThunk(
 
       return await response.json();
     } catch (error) {
-      return rejectWithValue(error.message)
+      return rejectWithValue(error.message);
     }
   }
-)
+);
 
 export const addProductToCart = createAsyncThunk(
   'cart/addProductToCart',
-  async(productData, { getState, rejectWithValue}) => {
+  async (productData, { getState, rejectWithValue }) => {
     const state = getState();
     const token = state.auth.accessToken;
 
@@ -38,8 +38,8 @@ export const addProductToCart = createAsyncThunk(
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(productData)
-      })
+        body: JSON.stringify(productData),
+      });
 
       if (!response.ok) {
         throw new Error('Не удалось добавить товар в корзину');
@@ -47,13 +47,65 @@ export const addProductToCart = createAsyncThunk(
 
       return await response.json();
     } catch (error) {
-      return rejectWithValue(error.message)
+      return rejectWithValue(error.message);
     }
   }
-)
+);
+
+export const updateProductInCart = createAsyncThunk(
+  'cart/updateProductInCart',
+  async (productData, { getState, rejectWithValue }) => {
+    const state = getState();
+    const token = state.auth.accessToken;
+
+    try {
+      const response = await fetch(`${API_URL}api/cart/products`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(productData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Не удалось обновить товар в корзине');
+      }
+
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const removeProductFromCart = createAsyncThunk(
+  'cart/removeProductFromCart',
+  async (productId, { getState, rejectWithValue }) => {
+    const state = getState();
+    const token = state.auth.accessToken;
+
+    try {
+      const response = await fetch(`${API_URL}api/cart/products/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Не удалось удалить товар из корзины');
+      }
+
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const initialState = {
-  products: [], 
+  products: [],
   totalPrice: 0,
   totalCount: 0,
   loadingFetch: false, // для получения корзины
@@ -61,11 +113,11 @@ const initialState = {
   loadingUpdate: false, // обновлять количество товаров в корзине
   loadingRemove: false, // удалять
   error: null,
-}
+};
 
 const cartSlice = createSlice({
   name: 'cart',
-  initialState, 
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -94,7 +146,38 @@ const cartSlice = createSlice({
         state.loadingAdd = false;
         state.error = action.payload;
       })
-  }
-})
+      .addCase(updateProductInCart.pending, (state) => {
+        state.loadingUpdate = true;
+      })
+      .addCase(updateProductInCart.fulfilled, (state, action) => {
+        
+        state.loadingUpdate = false;
+        state.products = state.products.map(item => {
+          if (item.id === action.payload.productCart.productId) {
+            item.quantity = action.payload.productCart.quantity
+          }
+          return item;
+        });
+      })
+      .addCase(updateProductInCart.rejected, (state, action) => {
+        state.loadingUpdate = false;
+        state.error = action.payload;
+      })
+      .addCase(removeProductFromCart.pending, (state) => {
+        state.loadingRemove = true;
+      })
+      .addCase(removeProductFromCart.fulfilled, (state, action) => {
+        state.loadingRemove = false;
+        state.products = state.products.filter(
+          (item) => item.id !== action.payload.id
+        );
+        state.totalCount = action.payload.totalCount;
+      })
+      .addCase(removeProductFromCart.rejected, (state, action) => {
+        state.loadingRemove = false;
+        state.error = action.payload;
+      });
+  },
+});
 
 export default cartSlice.reducer;
