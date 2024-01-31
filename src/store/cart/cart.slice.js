@@ -140,7 +140,14 @@ const cartSlice = createSlice({
       .addCase(addProductToCart.fulfilled, (state, action) => {
         state.loadingAdd = false;
         state.totalCount = action.payload.totalCount;
-        state.products.push(action.payload.product);
+        state.products.push({
+          ...action.payload.product,
+          quantity: action.payload.productCart.quantity,
+        });
+        state.totalPrice = state.products.reduce(
+          (acc, item) => item.price * item.quantity + acc,
+          0
+        );
       })
       .addCase(addProductToCart.rejected, (state, action) => {
         state.loadingAdd = false;
@@ -150,14 +157,17 @@ const cartSlice = createSlice({
         state.loadingUpdate = true;
       })
       .addCase(updateProductInCart.fulfilled, (state, action) => {
-        
         state.loadingUpdate = false;
-        state.products = state.products.map(item => {
+        state.products = state.products.map((item) => {
           if (item.id === action.payload.productCart.productId) {
-            item.quantity = action.payload.productCart.quantity
+            item.quantity = action.payload.productCart.quantity;
           }
           return item;
         });
+        state.totalPrice = state.products.reduce(
+          (acc, item) => item.price * item.quantity + acc,
+          0
+        );
       })
       .addCase(updateProductInCart.rejected, (state, action) => {
         state.loadingUpdate = false;
@@ -172,6 +182,10 @@ const cartSlice = createSlice({
           (item) => item.id !== action.payload.id
         );
         state.totalCount = action.payload.totalCount;
+        state.totalPrice = state.products.reduce(
+          (acc, item) => item.price * item.quantity + acc,
+          0
+        );
       })
       .addCase(removeProductFromCart.rejected, (state, action) => {
         state.loadingRemove = false;
