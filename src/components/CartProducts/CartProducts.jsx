@@ -7,7 +7,6 @@ import {
 } from '../../store/cart/cart.slice';
 
 export const CartProducts = ({ products }) => {
-  console.log(products);
   const dispatch = useDispatch();
 
   const handleMinus = (id, quantity) => {

@@ -8,6 +8,7 @@ import { Goods } from "./views/Goods/Goods";
 import { Catalog } from "./views/Catalog/Catalog";
 import { Cart } from "./views/Cart/Cart";
 import { Card } from "./components/Card/Card";
+import { Order } from "./components/Order/Order";
 
 const router = createBrowserRouter([
   {
@@ -82,6 +83,18 @@ const router = createBrowserRouter([
         <main>
           <Catalog />
           <Card />
+        </main>
+        <Footer />
+      </>
+    )
+  },
+  {
+    path: '/order/:orderId',
+    element:  (
+      <>
+        <Header />
+        <main>
+          <Order />
         </main>
         <Footer />
       </>
