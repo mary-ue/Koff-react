@@ -14,9 +14,19 @@ export const Catalog = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  if (loading) return <div>Загрузка...</div>;
+  if (loading)
+    return (
+      <Container>
+        <p>Загрузка...</p>
+      </Container>
+    );
 
-  if (error) return <div>Ошибка: {error}</div>;
+  if (error)
+    return (
+      <Container>
+        <p>Ошибка: {error}</p>
+      </Container>
+    );
 
   return (
     <nav className={s.catalog}>

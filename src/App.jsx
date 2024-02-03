@@ -9,6 +9,7 @@ import { Catalog } from "./views/Catalog/Catalog";
 import { Cart } from "./views/Cart/Cart";
 import { Card } from "./components/Card/Card";
 import { Order } from "./components/Order/Order";
+import { Breadcrumbs } from "./components/Breadcrumbs/Breadcrumbs";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
         <Header />
         <main>
           <Catalog />
+          <Breadcrumbs />
           <Goods />
         </main>
         <Footer />
@@ -82,6 +84,7 @@ const router = createBrowserRouter([
         <Header />
         <main>
           <Catalog />
+          <Breadcrumbs />
           <Card />
         </main>
         <Footer />
